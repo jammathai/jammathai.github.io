@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Why do I write?</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Special+Elite&display=swap");
+
+      body {
+        margin: 0;
+        background-color: black;
+        color: white;
+        font-family: "Special Elite";
+        font-size: 20px;
+        line-height: 1.5;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.75);
+      }
+
+      h1 {
+        display: inline;
+        margin: 0;
+        padding: 0;
+        font-size: 30px;
+        font-weight: normal;
+      }
+
+      .clickable {
+        text-decoration: underline;
+      }
+
+      .clickable:hover {
+        text-shadow: 0 0 10px white;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      span {
+        white-space: pre;
+      }
+
+      #crt {
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to top,
+          transparent 50%,
+          rgba(0, 0, 0, 0.5) 51%
+        );
+        background-size: cover;
+        background-size: 100% 2px;
+      }
+
+      #container {
+        margin: auto;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="crt"></div>
+    <div id="container">
+      <h1 id="title" class="clickable">Why do I write?</h1>
+      <br />
+      James Mathai<br /><br />
+      <div id="poem"></div>
+    </div>
+
+    <script>
+      const CHAR_DELAY = 100;
+
+      const queue = [];
+
+      setInterval(() => {
+        setTimeout(() => {
+          const callback = queue.shift();
+          if (callback) callback();
+        }, Math.random() * CHAR_DELAY);
+      }, CHAR_DELAY);
+
+      function queueInsertion(string, { position, onclick, level }) {
+        const span = document.createElement("span");
+        if (onclick) {
+          span.level = level;
+          span.className = "clickable";
+          span.onclick = () => {
+            for (const child of poem.children) {
+              if (child.level === span.level) {
+                child.className = "";
+                child.onclick = undefined;
+              }
+            }
+            onclick();
+          };
+        }
+        poem.insertBefore(span, poem.children[position]);
+        for (const char of string) {
+          queue.push(() => {
+            span.textContent += char;
+          });
+        }
+      }
+
+      function queueDeletion(position) {
+        const span = poem.children[position];
+        for (let i = 0; i < span.textContent.length; i++) {
+          queue.push(() => {
+            span.textContent = span.textContent.substring(
+              0,
+              span.textContent.length - 1
+            );
+            if (span.textContent === "") poem.removeChild(span);
+          });
+        }
+      }
+
+      function clickable(string, tree) {
+        return { string: string, tree: tree };
+      }
+
+      function queueTree(tree, index, level) {
+        for (const [i, node] of tree.entries()) {
+          if (typeof node === "string")
+            queueInsertion(node, { position: index + i + 1, level });
+          else {
+            queueInsertion(node.string, {
+              position: index + i + 1,
+              level,
+              onclick: () => {
+                queueDeletion(index + i);
+                queueTree(node.tree, index + i, level + 1);
+              },
+            });
+          }
+        }
+      }
+
+      title.onclick = () => {
+        title.className = "";
+        title.onclick = undefined;
+        queueTree(
+          [
+            "To ",
+            clickable("touch", [
+              "give you something,\n",
+              clickable("sparse words", [
+                "even when I can't quite\n",
+                "bring it to the surface;\n",
+                "the words tend to hide,\n",
+                clickable("fight like hell", [
+                  "and I find myself stumbling\n",
+                  "in the dark, trying\n",
+                  "to convince myself:\n",
+                  "“First thought, best thought.”\n",
+                  "It's a beautiful\n",
+                  "ideal, but sometimes\n",
+                  "(when you suck)\n",
+                  "that nagging voice is right.\n",
+                  "Be practical. Wrangling\n",
+                  "a poem into existence\n",
+                  "is something like\n",
+                  "courageous",
+                ]),
+                ". And I feel\n",
+                "an ",
+                clickable("obligation", [
+                  "overwhelming gratitude\n",
+                  "because the blustering,\n",
+                  "howling night is not a threat,\n",
+                  "but a spectacle; unharmed\n",
+                  "but unnerved, my uncanny\n",
+                  "urge is",
+                ]),
+                " to wring\n",
+                "myself out",
+              ]),
+              " on otherwise blank\n",
+              "canvas--",
+              clickable("a desperate", [
+                "somehow,\n",
+                "I maintain hope\n",
+                "that they will turn\n",
+                "your stomach, or break\n",
+                "your heart, or make you\n",
+                clickable("love me", [
+                  "see something in me that\n",
+                  "means something to you,\n",
+                  "something more than mere\n",
+                  "entertainment--would you think about me\n",
+                  "on your deathbead?\n",
+                  "I think I would think about you.\n",
+                  "Here's a harder one: have you thought\n",
+                  "about me in your actual bed, with sleep lapping\n",
+                  "at your mind?\n",
+                  "I'm not talking about forbidden desire,\n",
+                  "I'm talking about love; ecstacy\n",
+                  "and neurobiological processes, free\n",
+                  "association. More than anything,\n",
+                  "I long for symmetry",
+                ]),
+                ". So I close my\n",
+                "eyes, ",
+                clickable("take a drink", [
+                  "fail to begin, and reach\n",
+                  "for the bottle. The idea\n",
+                  "is to lower inhibitions, stop self-\n",
+                  "censoring. Have I drunk texted you\n",
+                  "yet? If not, I will. It'll probably\n",
+                  "look something like this.\n",
+                  "I'm obviously aware that it's a habit\n",
+                  "best broken early. But sometimes\n",
+                  "it's impossible to cry\n",
+                  "without lubrication.\n",
+                  "So I pour out a drink",
+                ]),
+                ",\n",
+                "and begin the",
+              ]),
+              " incantation.\n",
+              "I long for",
+            ]),
+            " ",
+            clickable("you", [
+              "a power greater\n",
+              "than any other. ",
+              clickable("Somehow", [
+                "I blame my father\n",
+                "for inundating me with ",
+                clickable("sentimentality", [
+                  "imperfect\n",
+                  "love and so much music;\n",
+                  "everything I feel starts with him\n",
+                  "(and everything I do starts\n",
+                  "with my mother\n",
+                  "and her father--\n",
+                  "“saints” is insufficient,\n",
+                  "maybe “idols” gets closer)",
+                ]),
+                ".\n",
+                "One of my greatest regrets:\n",
+                "dismissing John Prine (I wish\n",
+                "I could remember the song--maybe\n",
+                "“Hello in There”) because I was\n",
+                "unable to deal with the emotions.\n",
+                "He had attempted vulnerability,\n",
+                "and I had made a joke, and he was ",
+                clickable("hurt", ["silent"]),
+                ".\n",
+                "Now that I'm grown up enough\n",
+                "to cry over beautiful and haunting\n",
+                "creation",
+              ]),
+              ", my obsession\n",
+              "with you yields more than\n",
+              "tortured impotence. ",
+              clickable("I'm\nin love", [
+                "You are my ",
+                clickable("everything", [
+                  "muse,\n",
+                  "my audience, and my teacher",
+                ]),
+                "--\n",
+                "do you believe it?\n",
+                "Maybe just for a moment,\n",
+                "but I promise, it's true.\n",
+                "You are why I woke up this morning\n",
+                "with butterflies flittering\n",
+                "out of me. You have no idea\n",
+                "how ",
+                clickable("my heart races", [
+                  "terrified I am\n",
+                  "that you don't feel it;\n",
+                  "I search your eyes for a glimpse\n",
+                  "of a sign, a flicker of--\n",
+                  "I don't know, some kind of\n",
+                  "unity? I think I want to take psychadelics\n",
+                  "with you sometime. . .                              \n",
+                  "Allow me to return to the point:\n",
+                  "I want you to know how I feel\n",
+                  "(I would relish it, if I were you).\n",
+                  "In all the best and worst ways,\n",
+                  "I feel like a child",
+                ]),
+                "\n",
+                "as I approach",
+              ]),
+              "; watch me writhe. . ",
+            ]),
+            ".",
+          ],
+          0,
+          0
+        );
+      };
+    </script>
+  </body>
+</html>
