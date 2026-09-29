@@ -97,11 +97,11 @@ const words = {
       acrostic: [
         "Are you still awake, mein Geschöpf?",
         "Rest will find your cracked clay hands nestled underground",
-        "Making it up as you",
+        "Making it up as you go",
         "Angels and monsters are not so different",
         "Take comfort in the smallness of life",
         "Undulating in unison, these serpents find themselves full of joy",
-        "Regression in a natural part of the process",
+        "Regression is a natural part of the process",
         "Ein Kobold kann ohne ein Wiegenlied nicht schlafen",
       ],
     },
