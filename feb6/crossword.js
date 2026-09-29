@@ -1,26 +1,11 @@
-const crossword = {
-  numRows: 11,
-  numCols: 15,
-  words: [
-    { dir: "down", letters: "HAMMERHEAD", row: 0, col: 11 },
-    { dir: "down", letters: "LOQUAT", row: 3, col: 9 },
-    { dir: "across", letters: "TIMETRAVEL", row: 8, col: 5 },
-    { dir: "across", letters: "LOVE", row: 4, col: 8 },
-    { dir: "down", letters: "QUARTER", row: 4, col: 5 },
-    { dir: "down", letters: "ARMATURE", row: 1, col: 13 },
-    { dir: "across", letters: "SEAFOAM", row: 6, col: 0 },
-  ],
-};
-
 const selected = {
   wordNum: 1,
   offset: 0,
 };
 
-const table = document.getElementById("crossword");
-for (let i = 0; i < crossword.numRows; i++) {
-  table.appendChild(document.createElement("tr"));
-  for (let j = 0; j < crossword.numCols; j++) {
+for (let i = 0; i < words.numRows; i++) {
+  crossword.appendChild(document.createElement("tr"));
+  for (let j = 0; j < words.numCols; j++) {
     const label = document.createElement("span");
     label.className = "label";
 
@@ -29,16 +14,16 @@ for (let i = 0; i < crossword.numRows; i++) {
 
     const td = document.createElement("td");
     td.append(label, letter);
-    table.children[i].appendChild(td);
+    crossword.children[i].appendChild(td);
   }
 }
 
 function getWord(wordNum) {
-  return crossword.words[wordNum - 1];
+  return words.list[wordNum - 1];
 }
 
 function getCell(row, col) {
-  return table.children[row].children[col];
+  return crossword.children[row].children[col];
 }
 
 function getCellByWord(wordNum, offset) {
@@ -117,7 +102,7 @@ function setSelected(wordNum, offset) {
   selected.offset = offset;
 }
 
-for (const [index, word] of crossword.words.entries()) {
+for (const [index, word] of words.list.entries()) {
   setLabel(word.row, word.col, index + 1);
 
   for (let offset = 0; offset < word.letters.length; offset++)
@@ -125,24 +110,24 @@ for (const [index, word] of crossword.words.entries()) {
 }
 
 function fadeToBlack() {
-  document.getElementById("black").style.display = "block";
+  black.style.display = "block";
 
   setTimeout(() => {
-    document.getElementById("black").className = "shown";
+    black.className = "shown";
   }, 1000);
 
   setTimeout(() => {
-    document.getElementById("article").remove();
-    document.getElementById("enter").style.color = "white";
+    article.remove();
+    enter.style.color = "white";
 
     addEventListener("keydown", (e) => {
-      if (e.key === "e") startGame();
+      if (e.key === "e") window.location.href = "tunnels.html";
     });
   }, 11000);
 }
 
 function check() {
-  for (const [index, word] of crossword.words.entries()) {
+  for (const [index, word] of words.list.entries()) {
     for (let offset = 0; offset < word.letters.length; offset++) {
       if (getLetter(index + 1, offset) !== word.letters[offset]) return;
     }
@@ -173,12 +158,12 @@ function handleKeydown(e) {
 }
 
 function showCrossword() {
-  document.getElementById("modal").style.display = "block";
+  modal.style.display = "block";
   addEventListener("keydown", handleKeydown);
 }
 
 function hideCrossword() {
-  document.getElementById("modal").style.display = "none";
+  modal.style.display = "none";
   removeEventListener("keydown", handleKeydown);
 }
 
